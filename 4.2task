@@ -1,0 +1,39 @@
+import RPi.GPIO as GPIO
+
+import time
+
+def decimal2binary(value):
+ 
+    return [int(bit) for bit in format(value, 'b').zfill(8)]
+
+
+dac = [6, 12, 5, 0 , 1, 7, 11, 8]
+
+dac = dac[::-1]
+
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(dac, GPIO.OUT)
+
+try:
+    while True:
+        for number in range(256):
+
+            print(decimal2binary(number))
+            GPIO.output(dac, decimal2binary(number))
+            voltage = float(number) / 255 * 3.3
+            print(f"Out voltage is {voltage:.4} volt")
+
+            time.sleep(0.2)
+        for number in range(254, 0, -1):
+            print(decimal2binary(number))
+            GPIO.output(dac, decimal2binary(number))
+            voltage = float(number) / 255 * 3.3
+            print(f"Out voltage is {voltage:.4} volt")
+
+            time.sleep(0.2)
+
+finally:
+    GPIO.output(dac, 0)
+    GPIO.cleanup()
+    print("EOP")

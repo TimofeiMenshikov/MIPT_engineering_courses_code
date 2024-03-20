@@ -1,0 +1,24 @@
+import RPi.GPIO as GPIO
+GPIO.cleanup()
+GPIO.setmode(GPIO.BCM)
+
+outputport = 24
+
+
+GPIO.setup(outputport, GPIO.OUT)
+
+n = 10
+p = GPIO.PWM(outputport, 1000)
+p.start(0)
+
+try:
+    while (True):
+        f = int(input())
+        p.ChangeDutyCycle(f)
+        print(3.3 * f / 100)
+
+
+finally:
+    p.stop()
+    GPIO.output(outputport, 0)
+    GPIO.cleanup()
